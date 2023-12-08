@@ -294,6 +294,13 @@ impl ArgsAction {
                             let _ = send_tasks.spawn(async move {
                                 let result = future.await;
                                 debug!("kafka send message with key: {key}, result: {result:?}");
+                                if payload.len() > 100 * 1024 || result.is_err() {
+                                    warn!("kafka send message with key: {key}, result: {result:?}, message size: {}, msg kind {:?}", payload.len(), prom_kind);
+                                    if result.is_err() {
+                                        // need some time to print the warning
+                                        tokio::time::sleep(Duration::from_millis(1_000)).await;
+                                    }
+                                }
 
                                 let _ = result?.map_err(|(error, _message)| error)?;
                                 prom::sent_inc(prom_kind);
@@ -314,7 +321,11 @@ impl ArgsAction {
                                 }
                             }
                         }
-                        Err(error) => return Err(error.0.into()),
+                        Err(error) => {
+                            warn!("kafka send message with key2: {key}, error: {:?}, message size: {}, msg kind {:?}", error.0, payload.len(), prom_kind);
+                            tokio::time::sleep(Duration::from_millis(1_000)).await;
+                            return Err(error.0.into())
+                        },
                     }
                 }
                 None => break,
