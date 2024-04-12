@@ -609,30 +609,34 @@ async fn geyser_subscribe(
         match message {
             Ok(msg) => {
                 match msg.update_oneof {
-                    Some(UpdateOneof::Account(account)) => {
-                        let account: AccountPretty = account.into();
-                        info!(
-                            "new account update: filters {:?}, account: {:#?}",
-                            msg.filters, account
-                        );
+                    Some(UpdateOneof::Slot(slot)) => {
+                        info!("new slot update: {slot:?}",);
                         continue;
                     }
-                    Some(UpdateOneof::Transaction(tx)) => {
-                        let tx: TransactionPretty = tx.into();
-                        info!(
-                            "new transaction update: filters {:?}, transaction: {:#?}",
-                            msg.filters, tx
-                        );
-                        continue;
-                    }
-                    Some(UpdateOneof::TransactionStatus(status)) => {
-                        let status: TransactionStatusPretty = status.into();
-                        info!(
-                            "new transaction update: filters {:?}, transaction status: {:?}",
-                            msg.filters, status
-                        );
-                        continue;
-                    }
+                    // Some(UpdateOneof::Account(account)) => {
+                    //     let account: AccountPretty = account.into();
+                    //     info!(
+                    //         "new account update: filters {:?}, account: {:#?}",
+                    //         msg.filters, account
+                    //     );
+                    //     continue;
+                    // }
+                    // Some(UpdateOneof::Transaction(tx)) => {
+                    //     let tx: TransactionPretty = tx.into();
+                    //     info!(
+                    //         "new transaction update: filters {:?}, transaction: {:#?}",
+                    //         msg.filters, tx
+                    //     );
+                    //     continue;
+                    // }
+                    // Some(UpdateOneof::TransactionStatus(status)) => {
+                    //     let status: TransactionStatusPretty = status.into();
+                    //     info!(
+                    //         "new transaction update: filters {:?}, transaction status: {:?}",
+                    //         msg.filters, status
+                    //     );
+                    //     continue;
+                    // }
                     Some(UpdateOneof::Ping(_)) => {
                         // This is necessary to keep load balancers that expect client pings alive. If your load balancer doesn't
                         // require periodic client pings then this is unnecessary
@@ -645,7 +649,7 @@ async fn geyser_subscribe(
                     }
                     _ => {}
                 }
-                info!("new message: {msg:?}")
+                // info!("new message: {msg:?}")
             }
             Err(error) => {
                 error!("error: {error:?}");
