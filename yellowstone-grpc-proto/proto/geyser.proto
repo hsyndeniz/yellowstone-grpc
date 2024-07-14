@@ -113,7 +113,7 @@ message SubscribeUpdateAccount {
 }
 
 message SubscribeUpdateAccountInfo {
-  bytes pubkey = 1;
+  string pubkey = 1;
   uint64 lamports = 2;
   bytes owner = 3;
   bool executable = 4;
@@ -135,7 +135,7 @@ message SubscribeUpdateTransaction {
 }
 
 message SubscribeUpdateTransactionInfo {
-  bytes signature = 1;
+  string signature = 1;
   bool is_vote = 2;
   solana.storage.ConfirmedBlock.Transaction transaction = 3;
   solana.storage.ConfirmedBlock.TransactionStatusMeta meta = 4;

@@ -5,10 +5,6 @@
     },
     "grpc": {
         "address": "0.0.0.0:10000",
-        "tls_config": {
-            "cert_path": "",
-            "key_path": ""
-        },
         "compression": {
             "accept": [
                 "gzip"
@@ -68,8 +64,8 @@
                     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
                 ],
                 "include_transactions": true,
-                "include_accounts": false,
-                "include_entries": false
+                "include_accounts": true,
+                "include_entries": true
             },
             "blocks_meta": {
                 "max": 1

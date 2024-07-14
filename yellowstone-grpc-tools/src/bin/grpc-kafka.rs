@@ -264,6 +264,20 @@ impl ArgsAction {
             match message {
                 Some(message) => {
                     let payload = message.encode_to_vec();
+                    let payload_json = serde_json::to_string(&message)?;
+
+                    let topic = match message.update_oneof.as_ref() {
+                        Some(UpdateOneof::Account(_)) => "solana.testnet.account_updates",
+                        Some(UpdateOneof::Slot(_)) => "solana.testnet.slot_status",
+                        Some(UpdateOneof::Transaction(_)) => "solana.testnet.transaction",
+                        Some(UpdateOneof::TransactionStatus(_)) => "solana.testnet.transaction_status",
+                        Some(UpdateOneof::Block(_)) => "solana.testnet.block_updates",
+                        Some(UpdateOneof::BlockMeta(_)) => "solana.testnet.block_metadata",
+                        Some(UpdateOneof::Entry(_)) => "solana.testnet.entries",
+                        // For Ping and Pong or other types, use a default or skip
+                        Some(UpdateOneof::Ping(_)) | Some(UpdateOneof::Pong(_)) | None => continue,
+                    };
+
                     let message = match &message.update_oneof {
                         Some(value) => value,
                         None => unreachable!("Expect valid message"),
@@ -283,9 +297,9 @@ impl ArgsAction {
                     let key = format!("{slot}_{}", const_hex::encode(hash));
                     let prom_kind = GprcMessageKind::from(message);
 
-                    let record = FutureRecord::to(&config.kafka_topic)
+                    let record = FutureRecord::to(&topic)
                         .key(&key)
-                        .payload(&payload);
+                        .payload(&payload_json);
 
                     match kafka.send_result(record) {
                         Ok(future) => {

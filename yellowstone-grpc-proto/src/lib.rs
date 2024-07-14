@@ -584,8 +584,8 @@ pub mod convert_from {
 
     pub fn create_account(
         account: proto::SubscribeUpdateAccountInfo,
-    ) -> Result<(Pubkey, Account), String> {
-        let pubkey = create_pubkey(&account.pubkey)?;
+    ) -> Result<(String, Account), String> {
+        let pubkey = account.pubkey;
         let account = Account {
             lamports: account.lamports,
             data: account.data,

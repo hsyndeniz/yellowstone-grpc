@@ -88,7 +88,7 @@ impl MessageAccountInfo {
             data
         };
         SubscribeUpdateAccountInfo {
-            pubkey: self.pubkey.as_ref().into(),
+            pubkey: self.pubkey.to_string(),
             lamports: self.lamports,
             owner: self.owner.as_ref().into(),
             executable: self.executable,
@@ -159,7 +159,7 @@ pub struct MessageTransactionInfo {
 impl MessageTransactionInfo {
     fn to_proto(&self) -> SubscribeUpdateTransactionInfo {
         SubscribeUpdateTransactionInfo {
-            signature: self.signature.as_ref().into(),
+            signature: self.signature.to_string(),
             is_vote: self.is_vote,
             transaction: Some(convert_to::create_transaction(&self.transaction)),
             meta: Some(convert_to::create_transaction_meta(&self.meta)),

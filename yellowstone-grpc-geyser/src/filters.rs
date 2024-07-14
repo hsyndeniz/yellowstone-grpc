@@ -152,14 +152,10 @@ impl Filter {
         Box::new(
             self.get_filters(message, commitment)
                 .filter_map(|(filters, message)| {
-                    if filters.is_empty() {
-                        None
-                    } else {
-                        Some(SubscribeUpdate {
-                            filters,
-                            update_oneof: Some(message.to_proto(&self.accounts_data_slice)),
-                        })
-                    }
+                    Some(SubscribeUpdate {
+                        filters: Vec::new(),
+                        update_oneof: Some(message.to_proto(&self.accounts_data_slice)),
+                    })
                 }),
         )
     }
